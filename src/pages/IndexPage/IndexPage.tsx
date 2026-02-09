@@ -1,43 +1,63 @@
-import { Section, Cell, Image, List } from '@telegram-apps/telegram-ui';
-import type { FC } from 'react';
+import type { FC } from "react";
+import { qrScanner, sendData } from "@tma.js/sdk-react";
+import { useEffect } from "react";
+import { Page } from "@/components/Page.tsx";
+import { Button } from "@telegram-apps/telegram-ui";
+import emoji from "./emoji.gif";
+import "./indexPage.css";
+import { FaQrcode } from "react-icons/fa6";
 
-import { Link } from '@/components/Link/Link.tsx';
-import { Page } from '@/components/Page.tsx';
+const fetchQr = async () => {
+  if (!qrScanner.isSupported()) {
+    console.error("Scanner not supported");
+    return;
+  }
+  const scanned = qrScanner.capture({
+    capture(scannedQr) {
+      try {
+        console.log("scanning");
+        const data = JSON.parse(scannedQr);
+        if (data.code && data.c) {
+          if (sendData.isAvailable()) {
+            sendData(scannedQr);
+          }
+          return true;
+        }
+        return false;
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
+    },
+  });
 
-import tonSvg from './ton.svg';
-
+  await scanned; // ждём, пока сканирование завершится
+};
 export const IndexPage: FC = () => {
+  useEffect(() => {
+    // Задержка 100мс перед запуском
+    const timer = setTimeout(() => {
+      fetchQr();
+    }, 100);
+
+    return () => clearTimeout(timer); // очистка таймера
+  }, []);
+
   return (
     <Page back={false}>
-      <List>
-        <Section
-          header="Features"
-          footer="You can use these pages to learn more about features, provided by Telegram Mini Apps and other useful projects"
+      <div className="emoji">
+        <img src={emoji} alt="emoji" />
+      </div>
+      <div className="index_footer">
+        <Button
+          onClick={fetchQr}
+          stretched
+          size="l"
+          before={<FaQrcode fontSize={24} size={24} />}
         >
-          <Link to="/ton-connect">
-            <Cell
-              before={<Image src={tonSvg} style={{ backgroundColor: '#007AFF' }}/>}
-              subtitle="Connect your TON wallet"
-            >
-              TON Connect
-            </Cell>
-          </Link>
-        </Section>
-        <Section
-          header="Application Launch Data"
-          footer="These pages help developer to learn more about current launch information"
-        >
-          <Link to="/init-data">
-            <Cell subtitle="User data, chat information, technical data">Init Data</Cell>
-          </Link>
-          <Link to="/launch-params">
-            <Cell subtitle="Platform identifier, Mini Apps version, etc.">Launch Parameters</Cell>
-          </Link>
-          <Link to="/theme-params">
-            <Cell subtitle="Telegram application palette information">Theme Parameters</Cell>
-          </Link>
-        </Section>
-      </List>
+          Scan QR
+        </Button>
+      </div>
     </Page>
   );
 };

@@ -1,0 +1,12 @@
+.index_footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.emoji {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

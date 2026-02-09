@@ -1,9 +1,9 @@
 {
-  "name": "reactjs-template",
+  "name": "qrtns",
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "homepage": "https://telegram-mini-apps.github.io/reactjs-template",
+  "homepage": "https://yluto4ka.github.io/qrtns",
   "scripts": {
     "deploy": "gh-pages -d dist",
     "dev": "vite",
@@ -19,8 +19,10 @@
     "@tma.js/sdk-react": "^3.0.8",
     "@tonconnect/ui-react": "^2.2.0",
     "eruda": "^3.4.3",
+    "firebase": "^12.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-icons": "^5.5.0",
     "react-router-dom": "^6.30.1"
   },
   "devDependencies": {
